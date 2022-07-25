@@ -74,7 +74,7 @@ function fromJSON(proto, json) {
  *
  * The task is to design a single class, independent classes or classes hierarchy
  * and implement the functionality to build the css selectors using the provided cssSelectorBuilder.
- * Each selector should have the stringify() method to output the string representation
+ * Each selector should have the stringify() method to res the string representation
  * according to css specification.
  *
  * Provided cssSelectorBuilder should be used as facade only to create your own classes,
@@ -115,34 +115,73 @@ function fromJSON(proto, json) {
  */
 
 const cssSelectorBuilder = {
-  val: '',
+  res: '',
 
-  element(/* value */) {
-    throw new Error('Not implemented');
+  element(value) {
+    const obj = Object.create(cssSelectorBuilder);
+    this.error(1);
+    obj.errId = 1;
+    obj.res = `${this.res}${value}`;
+    return obj;
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  id(value) {
+    const obj = Object.create(cssSelectorBuilder);
+    this.error(2);
+    obj.errId = 2;
+    obj.res = `${this.res}#${value}`;
+    return obj;
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  class(value) {
+    const obj = Object.create(cssSelectorBuilder);
+    this.error(3);
+    obj.errId = 3;
+    obj.res = `${this.res}.${value}`;
+    return obj;
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  attr(value) {
+    const obj = Object.create(cssSelectorBuilder);
+    this.error(4);
+    obj.errId = 4;
+    obj.res = `${this.res}[${value}]`;
+    return obj;
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+  pseudoClass(value) {
+    const obj = Object.create(cssSelectorBuilder);
+    this.error(5);
+    obj.errId = 5;
+    obj.res = `${this.res}:${value}`;
+    return obj;
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  pseudoElement(value) {
+    const obj = Object.create(cssSelectorBuilder);
+    this.error(6);
+    obj.errId = 6;
+    obj.res = `${this.res}::${value}`;
+    return obj;
   },
 
-  combine(/* selector1, combinator, selector2 */) {
-    throw new Error('Not implemented');
+  stringify() {
+    return this.res;
+  },
+
+  combine(selector1, combinator, selector2) {
+    const obj = Object.create(cssSelectorBuilder);
+    obj.res = `${selector1.res} ${combinator} ${selector2.res}`;
+    return obj;
+  },
+
+  error(errId) {
+    if (this.errId > errId) {
+      throw new Error('Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element');
+    }
+    if (this.errId === errId && (errId === 1 || errId === 2 || errId === 6)) {
+      throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
+    }
   },
 };
 

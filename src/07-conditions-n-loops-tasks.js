@@ -357,8 +357,32 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  const openBrackets = ['[', '(', '{', '<'];
+  const bracketsPair = {
+    ']': '[',
+    ')': '(',
+    '}': '{',
+    '>': '<',
+  };
+  const stack = [];
+  for (let i = 0; i < str.length; i += 1) {
+    const currentSimbol = str[i];
+    if (openBrackets.includes(currentSimbol)) {
+      stack.push(currentSimbol);
+    } else {
+      if (stack.length === 0) {
+        return false;
+      }
+      const topEl = stack[stack.length - 1];
+      if (bracketsPair[currentSimbol] === topEl) {
+        stack.pop();
+      } else {
+        return false;
+      }
+    }
+  }
+  return !stack.length;
 }
 
 
@@ -476,8 +500,20 @@ function getMatrixProduct(m1, m2) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  if (
+    ((position[0][0] === position[1][1] && position[0][0] === position[2][2])
+    || (position[0][2] === position[1][1] && position[0][2] === position[2][0]))
+    && position[1][1]
+  ) return position[1][1];
+  for (let i = 0; i < 3; i += 1) {
+    if (
+      ((position[i][0] === position[i][1] && position[i][0] === position[i][2])
+      || (position[0][i] === position[1][i] && position[0][i] === position[2][i]))
+      && position[i][i]
+    ) return position[i][i];
+  }
+  return undefined;
 }
 
 
